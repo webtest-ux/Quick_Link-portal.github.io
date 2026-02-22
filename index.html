@@ -1,0 +1,467 @@
+<!-- 
+        ========================================================================
+        2. HTML STRUCTURE SECTION (User Interface)
+        ========================================================================
+    -->
+
+    <!-- Notification Toast -->
+    <div id="notification" class="fixed top-6 left-1/2 -translate-x-1/2 z-[3000] hidden">
+        <div class="bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 border border-slate-700">
+            <i class="fas fa-info-circle text-blue-400"></i>
+            <span id="notificationText">Message here</span>
+        </div>
+    </div>
+
+    <!-- Auth & Admin Modals -->
+    <div id="modalOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[2000] hidden items-center justify-center p-4">
+        <div id="authModal" class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl p-8 shadow-2xl relative hidden text-slate-900 dark:text-white">
+            <button onclick="closeModals()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <!-- Resident Login -->
+            <div id="loginView">
+                <h2 class="text-2xl font-bold mb-2 text-slate-900 dark:text-white">Resident Login</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Access your digital resident profile.</p>
+                <div class="space-y-4">
+                    <input type="text" id="loginId" placeholder="Resident ID / Email" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none focus:ring-2 ring-blue-500 text-slate-900 dark:text-white">
+                    <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg transition-all">Sign In</button>
+                    <p class="text-center text-sm text-slate-500">New resident? <a href="javascript:void(0)" onclick="toggleAuth('register')" class="text-blue-600 font-semibold">Create Profile</a></p>
+                </div>
+            </div>
+
+            <!-- Resident Registration -->
+            <div id="registerView" class="hidden">
+                <h2 class="text-2xl font-bold mb-2 text-center text-slate-900 dark:text-white">Register</h2>
+                <div class="space-y-4">
+                    <input type="text" id="regName" placeholder="Full Name" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none text-slate-900 dark:text-white">
+                    <select id="regAddress" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none text-slate-900 dark:text-white">
+                        <option>Purok 1</option>
+                        <option>Purok 2</option>
+                        <option>Purok 3</option>
+                        <option>Purok 4</option>
+                        <option>Purok 5</option>
+                    </select>
+                    <button onclick="handleRegister()" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl">Register Profile</button>
+                    <p class="text-center text-sm text-slate-500 mt-4"><a href="javascript:void(0)" onclick="toggleAuth('login')" class="text-blue-600">Back to Login</a></p>
+                </div>
+            </div>
+
+            <!-- Admin Entry -->
+            <div id="adminLoginView" class="hidden">
+                <h2 class="text-2xl font-bold mb-2 text-center text-slate-900 dark:text-white">Admin Access</h2>
+                <input type="password" id="adminPass" placeholder="Passcode" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none mb-4 text-slate-900 dark:text-white">
+                <button onclick="handleAdminLogin()" class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl">Verify</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Banner -->
+    <header class="bg-slate-900 text-white pt-12 pb-24 px-6 relative overflow-hidden" id="mainHeader">
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
+            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-slate-900 mb-6 shadow-2xl">
+                <i class="fas fa-landmark text-3xl"></i>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-2">Barangay Ubaliw</h1>
+            <p class="text-slate-400 text-lg font-light mb-8 max-w-lg">Official Community Governance Portal.</p>
+            <div id="userHeader">
+                <button onclick="openAuth()" class="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-8 py-3 rounded-full border border-white/20 transition-all font-medium">
+                    <i class="fas fa-user-circle mr-2"></i> Resident Login
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="glass-nav sticky top-4 mx-4 md:mx-auto max-w-2xl rounded-2xl shadow-xl z-50 mt-[-40px] border border-slate-200/50">
+        <div class="flex items-center justify-around py-3 px-2">
+            <a href="#home" class="nav-link flex flex-col items-center gap-1 text-[10px] md:text-xs font-bold text-blue-600">
+                <i class="fas fa-house text-lg"></i><span>Home</span>
+            </a>
+            <a href="#services" class="nav-link flex flex-col items-center gap-1 text-[10px] md:text-xs font-bold text-slate-400 hover:text-blue-500">
+                <i class="fas fa-folder-open text-lg"></i><span>Services</span>
+            </a>
+            <a href="#emergency" class="nav-link flex flex-col items-center gap-1 text-[10px] md:text-xs font-bold text-slate-400 hover:text-red-500">
+                <i class="fas fa-phone-alt text-lg"></i><span>Hotlines</span>
+            </a>
+            <a href="#portal" id="navPortalLink" class="nav-link flex flex-col items-center gap-1 text-[10px] md:text-xs font-bold text-slate-400 hover:text-blue-500">
+                <i class="fas fa-id-card text-lg"></i><span>Portal</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- RESIDENT VIEW -->
+    <main id="residentView" class="max-w-4xl mx-auto p-6 space-y-12 pb-24">
+        
+        <!-- Welcome Card -->
+        <section id="home" class="scroll-mt-24 space-y-6">
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 card-shadow border border-slate-100 dark:border-slate-800">
+                <div class="flex flex-col md:flex-row gap-8 items-start">
+                    <div class="w-full md:w-2/3">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center text-white">
+                                <i class="fas fa-user-tie text-xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Resident Dashboard</h2>
+                                <p class="text-sm text-slate-500">Mabuhay, Polangueño!</p>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 italic border-l-4 border-blue-500 pl-4 leading-relaxed">
+                            "This portal provides instant access to official documents and community services. Review the requirements below before submitting your request."
+                        </p>
+                    </div>
+                    <div class="w-full md:w-1/3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
+                        <h3 class="font-bold text-xs uppercase tracking-widest text-slate-400 mb-4 text-center">Community Stats</h3>
+                        <div class="space-y-4 text-slate-700 dark:text-slate-300">
+                            <div class="flex justify-between text-sm"><span>Residents</span><span class="font-bold text-blue-600">1,248</span></div>
+                            <div class="flex justify-between text-sm"><span>Req. Processed</span><span class="font-bold text-emerald-600">4,102</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Document Services Section -->
+        <section id="services" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold mb-6 text-slate-900 dark:text-white text-slate-900 dark:text-white">Document Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Service Cards -->
+                <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl card-shadow border border-slate-100 dark:border-slate-800 group transition-all">
+                    <i class="fas fa-file-invoice text-3xl text-blue-600 mb-6"></i>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">Certificate of Indigency</h3>
+                    <p class="text-slate-500 text-sm mb-6">For medical and educational assistance.</p>
+                    <button onclick="viewRequirements('indigency')" class="w-full py-3 bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white rounded-xl transition-all font-bold text-sm text-slate-700 dark:text-slate-300">View Details & Fees</button>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl card-shadow border border-slate-100 dark:border-slate-800 group transition-all">
+                    <i class="fas fa-stamp text-3xl text-emerald-600 mb-6"></i>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">Barangay Clearance</h3>
+                    <p class="text-slate-500 text-sm mb-6">For job applications and legal use.</p>
+                    <button onclick="viewRequirements('clearance')" class="w-full py-3 bg-slate-100 dark:bg-slate-800 hover:bg-emerald-600 hover:text-white rounded-xl transition-all font-bold text-sm text-slate-700 dark:text-slate-300">View Details & Fees</button>
+                </div>
+            </div>
+
+            <!-- Detailed Content (Populated via JS) -->
+            <div id="detailsBox" class="mt-8 hidden bg-white dark:bg-slate-900 p-8 rounded-3xl border-2 border-dashed border-blue-200 dark:border-slate-700 shadow-2xl animate-fade-in text-slate-900 dark:text-white">
+                <div id="detailsContent"></div>
+                <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                    <button onclick="scrollToPortal()" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane"></i> Proceed to Request
+                    </button>
+                    <button onclick="document.getElementById('detailsBox').classList.add('hidden')" class="px-8 py-4 rounded-2xl font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">Close</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hotlines -->
+        <section id="emergency" class="scroll-mt-24 space-y-6">
+            <h2 class="text-3xl font-bold text-red-600 flex items-center gap-3"><i class="fas fa-ambulance"></i> Emergency Hotlines</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-slate-900 dark:text-white">
+                <div class="bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900 p-6 rounded-3xl flex items-center justify-between card-shadow">
+                    <div><h4 class="font-bold text-red-600 text-xs">PNP Polangui</h4><p class="text-xl font-black">911</p></div>
+                    <a href="tel:911" class="w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg"><i class="fas fa-phone"></i></a>
+                </div>
+                <div class="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900 p-6 rounded-3xl flex items-center justify-between card-shadow">
+                    <div><h4 class="font-bold text-emerald-600 text-xs">Health Center</h4><p class="text-xl font-black">123-4567</p></div>
+                    <a href="tel:1234567" class="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg"><i class="fas fa-hospital"></i></a>
+                </div>
+                <div class="bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900 p-6 rounded-3xl flex items-center justify-between card-shadow">
+                    <div><h4 class="font-bold text-blue-600 text-xs">BFP Polangui</h4><p class="text-xl font-black">112</p></div>
+                    <a href="tel:112" class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg"><i class="fas fa-fire-extinguisher"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resident Portal Section -->
+        <section id="portal" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold mb-6 text-slate-900 dark:text-white text-slate-900 dark:text-white">Resident Portal</h2>
+            <div id="loggedOutState" class="bg-white dark:bg-slate-900 rounded-3xl p-12 text-center card-shadow border border-slate-100 dark:border-slate-800">
+                <i class="fas fa-lock text-3xl text-slate-400 mb-6 block text-slate-400"></i>
+                <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">Authenticated Access</h3>
+                <p class="text-slate-500 mb-8 max-w-sm mx-auto">Please login to submit requests and track your history.</p>
+                <button onclick="openAuth()" class="bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-10 py-4 rounded-full font-bold">Sign In to Request</button>
+            </div>
+
+            <div id="loggedInState" class="hidden space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    <!-- Application Form -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-100 dark:border-slate-800 text-slate-900 dark:text-white">
+                            <h3 class="text-xl font-bold mb-6 flex items-center gap-2 text-blue-600"><i class="fas fa-paper-plane"></i> New Request</h3>
+                            <form id="requestForm" class="space-y-4">
+                                <select id="docType" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none text-slate-900 dark:text-white">
+                                    <option value="Certificate of Indigency">Indigency</option>
+                                    <option value="Barangay Clearance">Clearance</option>
+                                    <option value="Certificate of Residency">Residency</option>
+                                </select>
+                                <textarea id="docPurpose" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none text-slate-900 dark:text-white" placeholder="Purpose for this request..."></textarea>
+                                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold">Submit Application</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Request History -->
+                    <div class="lg:col-span-3 bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-100 dark:border-slate-800 text-slate-900 dark:text-white">
+                        <h3 class="text-xl font-bold mb-6 flex items-center justify-between text-slate-900 dark:text-white">
+                            <span><i class="fas fa-clock-rotate-left mr-2 text-blue-600"></i>History</span>
+                            <span id="requestCount" class="text-xs bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full text-slate-500 font-bold">0</span>
+                        </h3>
+                        <div id="requestHistory" class="space-y-4 max-h-[400px] overflow-y-auto pr-2 no-scrollbar text-slate-900 dark:text-white">
+                            <div class="text-center py-12 text-slate-400">No history found.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QR Access Banner -->
+        <section class="bg-slate-900 text-white rounded-[3rem] p-10 md:p-16 text-center">
+            <h3 class="text-xl font-bold mb-6">Digital Bulletin Access</h3>
+            <div id="qrcode" class="bg-white p-4 rounded-2xl w-fit mx-auto mb-6 shadow-2xl"></div>
+            <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Scan to Access Anywhere</p>
+        </section>
+    </main>
+
+    <!-- ADMIN COMMAND CENTER VIEW -->
+    <main id="adminView" class="hidden max-w-6xl mx-auto p-6 space-y-8 pb-24 text-slate-900 dark:text-white">
+        <div class="flex items-center justify-between">
+            <h1 class="text-4xl font-black text-slate-900 dark:text-white text-slate-900 dark:text-white">Command Center</h1>
+            <button onclick="exitAdmin()" class="bg-slate-200 dark:bg-slate-800 px-6 py-2 rounded-full font-bold text-sm text-slate-700 dark:text-slate-300">Exit</button>
+        </div>
+        <div id="adminRequestList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 py-12 px-6 text-center text-sm text-slate-500">
+        <p>© 2026 Barangay Ubaliw Governance. <button onclick="toggleAuth('admin')" class="hover:text-blue-600 transition-colors uppercase font-bold tracking-widest ml-4">Admin Access</button></p>
+    </footer>
+
+    <!-- Report Issue Modal -->
+    <div id="reportModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[2000] hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl p-8 shadow-2xl relative text-slate-900 dark:text-white text-slate-900 dark:text-white">
+            <button onclick="closeReportModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-2">Report Community Issue</h2>
+            <div class="space-y-4 mt-6">
+                <div>
+                    <label class="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300 text-slate-700 dark:text-slate-300">Category</label>
+                    <select id="reportCategory" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none text-slate-900 dark:text-white">
+                        <option>Street Lights</option>
+                        <option>Sanitation</option>
+                        <option>Roads</option>
+                        <option>Security</option>
+                    </select>
+                </div>
+                <textarea id="reportDesc" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none text-slate-900 dark:text-white" placeholder="Details..."></textarea>
+                <button onclick="handleReportSubmit()" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-500/20">Submit Public Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+        ========================================================================
+        3. APPLICATION LOGIC SECTION (JavaScript)
+        ========================================================================
+    -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, updateDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+
+        // VS Code compatibility guards for environment variables
+        const configStr = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        if (configStr) {
+            const firebaseConfig = JSON.parse(configStr);
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+
+            let currentUser = null;
+            let isAdmin = false;
+
+            onAuthStateChanged(auth, async (user) => {
+                currentUser = user;
+                if (user) {
+                    // Rule 1 & 3: Ensure auth before path construction
+                    const userRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'data');
+                    const snap = await getDoc(userRef);
+                    if (snap.exists()) {
+                        const data = snap.data();
+                        isAdmin = data.role === 'admin';
+                        renderUI(data);
+                        if (isAdmin) setupAdminLogic(db, appId); else setupUserLogic(user.uid, db, appId);
+                    } else { renderUI(null); }
+                } else { renderUI(null); }
+            });
+
+            const initApp = async () => {
+                const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                if (token) await signInWithCustomToken(auth, token); else await signInAnonymously(auth);
+            };
+            initApp();
+
+            // Exposure of logic to global window scope for HTML onclick events
+            window.handleLogin = () => {
+                const id = document.getElementById('loginId').value;
+                if(!id) return notify("Enter ID");
+                initApp();
+                setTimeout(() => { if(!document.getElementById('loggedInState').classList.contains('hidden')) closeModals(); else toggleAuth('register'); }, 1000);
+            };
+
+            window.handleRegister = async () => {
+                const name = document.getElementById('regName').value;
+                if(!name) return notify("Name required");
+                await setDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data'), { name, role: 'resident' });
+                closeModals();
+            };
+
+            window.handleAdminLogin = async () => {
+                if (document.getElementById('adminPass').value === 'ubaliw2026') {
+                    await setDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data'), { name: "Admin", role: 'admin' });
+                    closeModals();
+                } else notify("Denied");
+            };
+
+            document.getElementById('requestForm').onsubmit = async (e) => {
+                e.preventDefault();
+                const type = document.getElementById('docType').value;
+                const purpose = document.getElementById('docPurpose').value;
+                const reqId = "REQ" + Date.now();
+                await setDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'requests', reqId), { type, purpose, status: 'Pending', timestamp: new Date().toISOString() });
+                const prof = (await getDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data'))).data();
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'queue'), { userId: currentUser.uid, requestId: reqId, userName: prof.name, type, purpose, status: 'Pending', timestamp: new Date().toISOString() });
+                notify("Submitted"); e.target.reset();
+            };
+        }
+
+        // Shared Presentation Logic
+        function renderUI(userData) {
+            const userHeader = document.getElementById('userHeader');
+            const portalLink = document.getElementById('navPortalLink');
+            const loggedIn = document.getElementById('loggedInState');
+            const loggedOut = document.getElementById('loggedOutState');
+
+            if (userData) {
+                userHeader.innerHTML = `<div class="bg-white/10 px-4 py-2 rounded-full border border-white/20 flex gap-4 text-xs font-bold items-center text-white"><span>${userData.name}</span><button onclick="signOutLocal()">Out</button></div>`;
+                if (loggedIn) loggedIn.classList.remove('hidden');
+                if (loggedOut) loggedOut.classList.add('hidden');
+                if (userData.role === 'admin') {
+                    portalLink.innerHTML = '<i class="fas fa-toolbox text-lg"></i><span>Admin</span>';
+                    portalLink.onclick = (e) => { e.preventDefault(); enterAdmin(); };
+                }
+            } else {
+                userHeader.innerHTML = `<button onclick="openAuth()" class="bg-white/10 px-8 py-3 rounded-full border border-white/20 font-bold text-white text-white">Login</button>`;
+                if (loggedIn) loggedIn.classList.add('hidden');
+                if (loggedOut) loggedOut.classList.remove('hidden');
+            }
+        }
+
+        function setupUserLogic(uid, db, appId) {
+            // Rule 2: Single collection query, filtering in memory
+            onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'requests'), (snap) => {
+                const list = document.getElementById('requestHistory');
+                const docs = snap.docs.map(d => d.data()).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+                document.getElementById('requestCount').innerText = docs.length;
+                list.innerHTML = docs.map(req => `<div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex justify-between items-start text-slate-900 dark:text-white"><div><h4 class="font-bold text-sm">${req.type}</h4><p class="text-[10px] text-slate-500 italic mt-1">${req.adminRemarks || 'Processing...'}</p></div><span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${req.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${req.status}</span></div>`).join('');
+            });
+        }
+
+        function setupAdminLogic(db, appId) {
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'queue'), (snap) => {
+                const list = document.getElementById('adminRequestList');
+                const items = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+                list.innerHTML = items.map(req => `
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl text-slate-900 dark:text-white">
+                        <h4 class="font-bold text-lg text-slate-900 dark:text-white">${req.type}</h4>
+                        <p class="text-xs text-slate-400 mb-4">${req.userName} • ${req.purpose}</p>
+                        <input type="text" id="rem_${req.id}" placeholder="Admin Note" class="w-full text-sm p-3 mb-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none text-slate-900 dark:text-white">
+                        <div class="flex gap-2">
+                            <button onclick="processAdmin('${req.id}', 'Completed', '${req.userId}', '${req.requestId}')" class="flex-1 bg-emerald-600 text-white py-2 rounded-lg font-bold">Approve</button>
+                            <button onclick="processAdmin('${req.id}', 'Rejected', '${req.userId}', '${req.requestId}')" class="flex-1 bg-red-600 text-white py-2 rounded-lg font-bold">Reject</button>
+                        </div>
+                    </div>`).join('');
+                
+                window.processAdmin = async (qid, status, ruid, rreqid) => {
+                    const remarks = document.getElementById(`rem_${qid}`).value;
+                    await updateDoc(doc(db, 'artifacts', appId, 'users', ruid, 'requests', rreqid), { status, adminRemarks: remarks });
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'queue', qid), { status });
+                    notify(`Marked as ${status}`);
+                };
+            });
+        }
+
+        window.signOutLocal = () => location.reload();
+    </script>
+
+    <!-- UI Utility Helpers -->
+    <script>
+        const requirementsData = {
+            indigency: {
+                title: "Certificate of Indigency", fees: "FREE",
+                docs: ["Valid ID", "Purok Certification", "Proof of Low Income"],
+                steps: ["Prepare documents", "Submit request online", "Wait for 'Completed' status", "Claim at Window 1"],
+                time: "15-30 Minutes"
+            },
+            clearance: {
+                title: "Barangay Clearance", fees: "₱50.00",
+                docs: ["Latest Cedula", "Valid ID"],
+                steps: ["Submit request here", "Pay fee at Treasurer", "Wait for signature", "Dry seal application"],
+                time: "10 Minutes"
+            }
+        };
+
+        window.viewRequirements = (type) => {
+            const data = requirementsData[type];
+            const content = document.getElementById('detailsContent');
+            const box = document.getElementById('detailsBox');
+            content.innerHTML = `
+                <h3 class="text-2xl font-black mb-4 text-slate-900 dark:text-white">${data.title}</h3>
+                <div class="grid md:grid-cols-2 gap-8 text-slate-900 dark:text-white">
+                    <div><h4 class="text-xs uppercase font-bold text-blue-500 mb-2 text-blue-500">Requirements</h4><ul class="text-sm space-y-1 text-slate-600 dark:text-slate-400">${data.docs.map(d => `<li>• ${d}</li>`).join('')}</ul></div>
+                    <div><h4 class="text-xs uppercase font-bold text-blue-500 mb-2 text-blue-500">Procedure</h4><ol class="text-sm space-y-1 text-slate-600 dark:text-slate-400">${data.steps.map((s,i) => `<li>${i+1}. ${s}</li>`).join('')}</ol></div>
+                </div>
+                <div class="mt-6 flex justify-between text-xs font-bold uppercase text-slate-400"><span>Fee: ${data.fees}</span><span>Time: ${data.time}</span></div>
+            `;
+            box.classList.remove('hidden');
+            box.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.notify = (msg) => {
+            const note = document.getElementById('notification');
+            document.getElementById('notificationText').innerText = msg;
+            note.classList.remove('hidden');
+            setTimeout(() => note.classList.add('hidden'), 3000);
+        };
+
+        window.toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('brgy-theme', isDark ? 'dark' : 'light');
+            updateThemeIcon();
+        };
+
+        window.updateThemeIcon = () => {
+            const icon = document.getElementById('themeIcon');
+            const isDark = document.documentElement.classList.contains('dark');
+            if(icon) icon.className = isDark ? 'fas fa-sun text-yellow-400' : 'fas fa-moon text-white';
+        };
+
+        window.openAuth = () => { document.getElementById('modalOverlay').style.display = 'flex'; document.getElementById('authModal').classList.remove('hidden'); toggleAuth('login'); };
+        window.closeModals = () => { document.getElementById('modalOverlay').style.display = 'none'; document.getElementById('authModal').classList.add('hidden'); };
+        window.toggleAuth = (mode) => { ['loginView', 'registerView', 'adminLoginView'].forEach(v => document.getElementById(v).classList.add('hidden')); document.getElementById(mode + 'View').classList.remove('hidden'); };
+        window.scrollToPortal = () => document.getElementById('portal').scrollIntoView({ behavior: 'smooth' });
+        window.enterAdmin = () => { document.getElementById('residentView').classList.add('hidden'); document.getElementById('mainHeader').classList.add('hidden'); document.getElementById('adminView').classList.remove('hidden'); window.scrollTo(0,0); };
+        window.exitAdmin = () => { document.getElementById('adminView').classList.add('hidden'); document.getElementById('residentView').classList.remove('hidden'); document.getElementById('mainHeader').classList.remove('hidden'); };
+
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('brgy-theme') === 'dark') document.documentElement.classList.add('dark');
+            updateThemeIcon();
+            const qr = document.getElementById("qrcode");
+            if (qr) { qr.innerHTML = ""; new QRCode(qr, { text: window.location.href, width: 140, height: 140, colorDark: "#0f172a" }); }
+        });
+    </script>
+</body>
+</html>
